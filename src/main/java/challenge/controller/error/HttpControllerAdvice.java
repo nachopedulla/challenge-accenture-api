@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import java.util.stream.Collectors;
 
@@ -58,6 +60,18 @@ public class HttpControllerAdvice {
                 HttpStatus.BAD_REQUEST.value(),
                 BAD_REQUEST,
                 errors
+        );
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorApiDto handle(MissingServletRequestParameterException ex) {
+        String errorMessage = "Validation failed: " + ex.getMessage();
+
+        return new ErrorApiDto(
+                HttpStatus.BAD_REQUEST.value(),
+                BAD_REQUEST,
+                errorMessage
         );
     }
 

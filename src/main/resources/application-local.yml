@@ -9,23 +9,8 @@ spring:
       name: TBD
       password: TBD
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 clients:
   internal-call:
     url: http://localhost:8080
+    username: TBD
+    password: TBDw

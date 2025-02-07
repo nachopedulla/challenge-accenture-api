@@ -20,9 +20,17 @@ import reactor.core.publisher.Mono;
 public class InternalCallClient {
 
     private final WebClient webClient;
+    private final String password;
+    private final String username;
 
-    public InternalCallClient(@Value("${clients.internal-call.url}") String url) {
+    public InternalCallClient(
+            @Value("${clients.internal-call.url}") String url,
+            @Value("${clients.internal-call.username}") String username,
+            @Value("${clients.internal-call.password}") String password
+    ) {
         this.webClient = WebClient.builder().baseUrl(url).build();
+        this.username = username;
+        this.password = password;
     }
 
     public PageResponseDto<CreditCardDto> getCards(CreditCardCriteriaDto criteria, Pageable pageable) {
@@ -32,7 +40,7 @@ public class InternalCallClient {
                 .uri(uriBuilder -> uriBuilder.path("/credit-cards")
                         .queryParams(params(criteria, pageable))
                         .build())
-                .headers(httpHeaders -> httpHeaders.setBasicAuth("test", "test"))
+                .headers(httpHeaders -> httpHeaders.setBasicAuth(username, password))
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, response -> response.bodyToMono(String.class).flatMap(error -> {
                     log.error("Error on credit-card-api call: status=[{}] response=[{}]", response.statusCode(), error);

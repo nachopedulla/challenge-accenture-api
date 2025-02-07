@@ -10,6 +10,7 @@ import challenge.model.entity.CreditCard;
 import challenge.model.enums.Status;
 import challenge.repository.CreditCardRepository;
 import challenge.specification.CreditCardSpecification;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -60,12 +62,38 @@ public class CreditCardService {
     public CreditCard remove(String id) {
         var card = getById(id);
 
-        if (Status.INACTIVE == card.getStatus()) {
-            throw new CardAlreadyCloseException(CARD_ALREADY_INACTIVE_ERROR.formatted(id));
-        }
+        validateClosedCard(card);
 
         card.setStatus(Status.INACTIVE);
         card.setLastModifiedDate(LocalDateTime.now());
         return creditCardRepository.save(card);
     }
+
+    public CreditCard update(String id, @Valid CreditCardDto request) {
+        var card = getById(id);
+
+        /* It could be a list of rules to apply and verify */
+
+        validateClosedCard(card);
+
+        /* If number changes, validates it's not in use */
+        if (!Objects.equals(card.getNumber(), request.number())) {
+            validateExistingCard(request.number());
+        }
+
+        /* status is not updated, it should be done by delete */
+        card.setNumber(request.number());
+        card.setBrand(request.brand());
+        card.setCustomer(request.customer());
+        card.setLastModifiedDate(LocalDateTime.now());
+
+        return creditCardRepository.save(card);
+    }
+
+    private static void validateClosedCard(CreditCard card) {
+        if (Status.INACTIVE == card.getStatus()) {
+            throw new CardAlreadyCloseException(CARD_ALREADY_INACTIVE_ERROR.formatted(card.getId()));
+        }
+    }
+
 }

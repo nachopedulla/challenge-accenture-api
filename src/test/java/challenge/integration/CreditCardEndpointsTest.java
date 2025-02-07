@@ -190,6 +190,33 @@ class CreditCardEndpointsTest {
                 .isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void testUpdateRequestOnInactiveCardReturnsConflict() {
+        var request = new CreditCardDto(null, "customer", 5000000000000002L, Brand.MASTERCARD, null, null);
+        webTestClient
+                .put()
+                .uri(uriBuilder -> uriBuilder.path("/credit-cards/CARD_2").build())
+                .headers(auth())
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    void testUpdateRequestWithAlreadyUsedNumberReturnsConflict() {
+        var request = new CreditCardDto(null, "customer", 5000000000000001L, Brand.VISA, null, null);
+        webTestClient
+                .put()
+                .uri(uriBuilder -> uriBuilder.path("/credit-cards/CARD_3").build())
+                .headers(auth())
+                .bodyValue(request)
+                .exchange()
+                .expectStatus()
+                .isEqualTo(HttpStatus.CONFLICT);
+    }
+
+
     private Consumer<HttpHeaders> auth() {
         return httpHeaders -> httpHeaders.setBasicAuth("test_user", "test_password");
     }

@@ -63,7 +63,7 @@ class CreditCardServiceTest {
     @Test
     void testCardCreation() {
         Mockito.when(creditCardRepository.findByNumber(CARD_NUMBER)).thenReturn(Optional.empty());
-        Mockito.when(creditCardRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        mockRepositorySave();
 
         var card = creditCardService.create(cardDto());
 
@@ -75,11 +75,31 @@ class CreditCardServiceTest {
     @Test
     void testCardRemoval() {
         Mockito.when(creditCardRepository.findById(CARD_ID)).thenReturn(Optional.of(card(Status.ACTIVE)));
-        Mockito.when(creditCardRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
+        mockRepositorySave();
 
         var card = creditCardService.remove(CARD_ID);
         Assertions.assertEquals(Status.INACTIVE, card.getStatus());
         Assertions.assertEquals(LocalDate.now(), card.getLastModifiedDate().toLocalDate());
+    }
+
+    @Test
+    void testCardUpdateWithAlreadyUsedNumber() {
+        var card = card(Status.ACTIVE);
+        Mockito.when(creditCardRepository.findByNumber(CARD_NUMBER)).thenReturn(Optional.of(card));
+        Mockito.when(creditCardRepository.findById(CARD_ID)).thenReturn(Optional.of(new CreditCard()));
+
+        var request = cardDto();
+        Assertions.assertThrows(CreditCardAlreadyExistsException.class, () -> creditCardService.update(CARD_ID, request));
+    }
+
+    @Test
+    void testCardIsUpdate() {
+        var card = card(Status.ACTIVE);
+        Mockito.when(creditCardRepository.findById(CARD_ID)).thenReturn(Optional.of(card));
+        mockRepositorySave();
+
+        var request = cardDto();
+        Assertions.assertNotNull(creditCardService.update(CARD_ID, request));
     }
 
     private CreditCard card(Status status) {
@@ -101,5 +121,9 @@ class CreditCardServiceTest {
                 Status.ACTIVE,
                 LocalDateTime.now()
         );
+    }
+
+    private void mockRepositorySave() {
+        Mockito.when(creditCardRepository.save(Mockito.any())).thenAnswer(i -> i.getArguments()[0]);
     }
 }
