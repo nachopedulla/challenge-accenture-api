@@ -1,38 +1,90 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# Compiled class file
+*.class
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
-*.iml
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+
+# Maven target directory
+/target/
+
+# IntelliJ IDEA
+/.idea/
+/*.iml
+/out/
+/*.iws
+
+# IntelliJ IDEA artifacts
 *.ipr
+*.iws
+*.idea/
+*.iml
+*.wsdl
+*.dot
+*.pdf
+*.pidb
+*.key
+*.pyc
+*.pyo
+*.pyd
+*.dll
+*.so
+*.dylib
+*.lib
+*.pdb
+*.exr
 
-### Eclipse ###
-.apt_generated
-.classpath
-.factorypath
+# JEnv
+.jenv
+
+# Eclipse
 .project
-.settings
-.springBeans
-.sts4-cache
+.classpath
+.cxxd
+.settings/
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
+/build/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+
+# JDeveloper
+*.jws
+
+# VS Code
 .vscode/
 
-### Mac OS ###
+# Gradle
+.gradle/
+
+# OS generated files
 .DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Python
+__pycache__/
