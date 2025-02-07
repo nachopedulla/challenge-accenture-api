@@ -1,0 +1,31 @@
+spring:
+  jpa:
+    defer-datasource-initialization: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+  security:
+    user:
+      name: TBD
+      password: TBD
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+clients:
+  internal-call:
+    url: http://localhost:8080

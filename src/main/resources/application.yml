@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+    database-platform: org.hibernate.dialect.H2Dialect
+  security:
+    user:
+      name: ${SPRING_SECURITY_USERNAME}
+      password: ${SPRING_SECURITY_PASSWORD}
+
+clients:
+  internal-call:
+    url: http://localhost:8080
+
+springdoc:
+  api-docs:
+    enabled: true
+
+swagger-ui:
+  enabled: true
